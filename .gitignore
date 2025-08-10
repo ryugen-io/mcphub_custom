@@ -18,6 +18,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# encrypted keys
+keys.encrypted
+
 # misc
 .DS_Store
 .idea/

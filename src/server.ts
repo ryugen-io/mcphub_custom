@@ -14,6 +14,7 @@ import {
 } from './services/sseService.js';
 import { initializeDefaultUser } from './models/User.js';
 import { sseUserContextMiddleware } from './middlewares/userContext.js';
+import { keyManager } from './services/keyManager.js';
 
 // Get the current working directory (will be project root in most cases)
 const currentFileDir = process.cwd() + '/src';
@@ -38,6 +39,10 @@ export class AppServer {
 
       // Initialize default admin user if no users exist
       await initializeDefaultUser();
+
+      // Initialize encrypted key manager with default keys
+      keyManager.initializeDefaultKeys();
+      console.log('Key manager initialized successfully');
 
       initMiddlewares(this.app);
       initRoutes(this.app);

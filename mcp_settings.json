@@ -33,6 +33,24 @@
         "SLACK_BOT_TOKEN": "your-bot-token",
         "SLACK_TEAM_ID": "your-team-id"
       }
+    },
+    "svgmaker": {
+      "command": "npx",
+      "args": [
+        "@samanhappy/mcp-svgmaker-server"
+      ],
+      "env": {
+        "API_KEY": "${SVGMAKER_API_KEY}"
+      }
+    },
+    "postman": {
+      "command": "npx",
+      "args": [
+        "@samanhappy/mcp-postman-server"
+      ],
+      "env": {
+        "POSTMAN_API_KEY": "${POSTMAN_API_KEY}"
+      }
     }
   },
   "users": [

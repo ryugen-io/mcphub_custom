@@ -5,6 +5,7 @@ import { getConfigFilePath } from '../utils/path.js';
 import { getPackageVersion } from '../utils/version.js';
 import { getDataService } from '../services/services.js';
 import { DataService } from '../services/dataService.js';
+import { keyManager } from '../services/keyManager.js';
 
 dotenv.config();
 
@@ -131,10 +132,28 @@ export const expandEnvVars = (value: string): string => {
   if (typeof value !== 'string') {
     return String(value);
   }
-  // Replace ${VAR} format
-  let result = value.replace(/\$\{([^}]+)\}/g, (_, key) => process.env[key] || '');
+  // Replace ${VAR} format - check KeyManager first, then env vars
+  let result = value.replace(/\$\{([^}]+)\}/g, (_, key) => {
+    // First try encrypted key manager
+    const keyValue = keyManager.getKey(key);
+    if (keyValue !== undefined) {
+      return keyValue;
+    }
+    // Fallback to environment variables
+    return process.env[key] || '';
+  });
+  
   // Also replace $VAR format (common on Unix-like systems)
-  result = result.replace(/\$([A-Z_][A-Z0-9_]*)/g, (_, key) => process.env[key] || '');
+  result = result.replace(/\$([A-Z_][A-Z0-9_]*)/g, (_, key) => {
+    // First try encrypted key manager
+    const keyValue = keyManager.getKey(key);
+    if (keyValue !== undefined) {
+      return keyValue;
+    }
+    // Fallback to environment variables
+    return process.env[key] || '';
+  });
+  
   return result;
 };
 
